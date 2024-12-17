@@ -96,11 +96,6 @@ For more information about Unix shells and system programming, see:
 - Linux Programmer’s Manual
 - The C Programming Language
 
-## Contributors
-
-- Joseph Gleason Lopez
-- Jean Carlo Carrion Caraballo
-
 ## Project Tasks
 
 ### 0. README, man, AUTHORS
@@ -129,4 +124,9 @@ For more information about Unix shells and system programming, see:
 
 ### 6. Simple shell 1.0
 - Implement the `env` built-in command that prints the current environment.
+
+## Contributors
+
+- Joseph Gleason Lopez
+- Jean Carlo Carrion Caraballo
 
