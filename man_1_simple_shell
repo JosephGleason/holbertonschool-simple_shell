@@ -1,0 +1,66 @@
+.\" Manpage for simple_shell
+.TH SIMPLE_SHELL 1 "December 2024" "1.0" "Simple Shell Manual"
+.SH NAME
+simple_shell \- A simple Unix shell program
+.SH SYNOPSIS
+.B simple_shell
+[\-h]
+.SH DESCRIPTION
+simple_shell is a basic Unix command-line interpreter. It allows the user to execute commands interactively or via piping, with simple error handling.
+
+.SH FUNCTIONALITY
+.B simple_shell 0.1
+.I basic shell implementation, capable of handling commands with no arguments.
+
+.B simple_shell 0.2
+.I Handles command lines with arguments.
+
+.B simple_shell 0.3
+.I Handles the PATH and avoids forking if a command doesn’t exist.
+
+.B simple_shell 0.4
+.I Implements the exit built-in to terminate the shell.
+
+.B simple_shell 1.0
+.I Implements the env built-in, which prints the current environment variables.
+
+.SH OPTIONS
+.TP
+.B \-h
+Prints help information about the shell.
+
+.SH COMMANDS
+.TP
+.B exit
+Exits the shell program.
+
+.TP
+.B env
+Prints the current environment variables.
+
+.SH EXIT STATUS
+The shell will exit with the following status codes:
+.TP
+0  Successful completion.
+.TP
+1  Error: Command not found.
+
+.SH ERROR HANDLING
+If an invalid command is entered, the shell will display an error message and prompt the user again for input.
+
+.SH ENVIRONMENT VARIABLES
+The shell inherits the environment variables from the parent process and can display them using the `env` built-in.
+
+.SH USAGE
+.B simple_shell
+[\-h]
+
+.SH INTERACTIVE MODE
+When run without input redirection, the shell will display a prompt and wait for user input.
+
+.SH NON-INTERACTIVE MODE
+When run with input redirection, the shell will read from standard input until EOF is encountered.
+
+.SH AUTHOR
+Developed by Joseph Gleason Lopez and Jean Carlo Carrion Caraballo
+
