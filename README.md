@@ -11,6 +11,7 @@
 - [Challenges](#challenges)
 - [Reference](#reference)
 - [Contributors](#contributors)
+- [Project Tasks](#project-tasks)
 
 ## Project Overview
 
@@ -99,4 +100,33 @@ For more information about Unix shells and system programming, see:
 
 - Joseph Gleason Lopez
 - Jean Carlo Carrion Caraballo
+
+## Project Tasks
+
+### 0. README, man, AUTHORS
+- Write a README
+- Write a man for your shell.
+- Create an AUTHORS file listing all individuals contributing to the repository.
+
+### 1. Betty would be proud
+- Write a beautiful code that passes the Betty checks.
+
+### 2. Simple shell 0.1
+- Write a UNIX command line interpreter.
+- The shell should display a prompt and wait for the user to type a command, executing that command when entered.
+- The shell should handle errors, including cases where executables cannot be found.
+- Handle the “end of file” condition (Ctrl+D).
+
+### 3. Simple shell 0.2
+- Handle command lines with arguments.
+
+### 4. Simple shell 0.3
+- Handle the PATH.
+- `fork` must not be called if the command doesn’t exist.
+
+### 5. Simple shell 0.4
+- Implement the exit built-in command that terminates the shell.
+
+### 6. Simple shell 1.0
+- Implement the `env` built-in command that prints the current environment.
 
