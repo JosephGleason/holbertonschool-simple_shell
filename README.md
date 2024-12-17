@@ -1,20 +1,102 @@
 # Simple Shell Project
 
-## Description
-The **Simple Shell** project is a custom implementation of a Unix command-line interpreter. This program emulates the basic behavior of the Unix shell, allowing users to interact with the operating system through commands. It serves as an educational project to deepen understanding of processes, system calls, memory management, and other fundamental concepts in C programming.
+## Table of Contents
+- [Project Overview](#project-overview)
+- [Purpose](#purpose)
+- [Main Features](#main-features)
+- [Intended Audience](#intended-audience)
+- [Supported Specifiers](#supported-specifiers)
+- [Compilation Instructions](#compilation-instructions)
+- [Language](#language)
+- [Challenges](#challenges)
+- [Reference](#reference)
+- [Contributors](#contributors)
 
-## Features
-- Displays a prompt and waits for user input.
+## Project Overview
+
+The Simple Shell project is a basic implementation of a Unix command-line interpreter. This shell allows users to execute commands in both interactive and non-interactive modes, similar to standard shells such as bash or sh. It demonstrates fundamental concepts in system programming, such as process creation, file handling, and memory management.
+
+## Purpose
+
+This project was developed as part of the Holberton School curriculum to:
+
+- Enhance understanding of the C programming language.
+- Explore system calls, such as `fork`, `execve`, and `wait`.
+- Build knowledge of memory allocation and management.
+- Learn about parsing user input and managing tokens.
+
+## Main Features
+
+- Displays a prompt and waits for user input in interactive mode.
 - Executes commands with their arguments.
-- Handles built-in commands such as `exit`.
-- Supports execution of programs located in the `PATH` environment variable.
-- Handles basic error messages.
+- Handles built-in commands, such as `exit`.
+- Supports searching for executables in the `PATH` environment variable.
 - Works in both interactive and non-interactive modes.
+- Provides basic error handling and messages.
 
-## Usage
+## Intended Audience
+
+This project is intended for:
+
+- Students and programmers learning C and Unix system programming.
+- Developers interested in understanding shell implementations.
+- Anyone looking to deepen their knowledge of operating systems and command-line interfaces.
+
+## Supported Specifiers
+
+The shell recognizes standard commands available in the system’s `PATH`.
+
+Built-in commands supported include:
+
+- `exit` to terminate the shell.
+
+## Compilation Instructions
+
+To compile the Simple Shell project, follow these steps:
+
 1. Clone the repository:
-   ```bash
-   git clone https://github.com/your-repo/simple_shell.git
+    ```bash
+    git clone https://github.com/your-repo/simple_shell.git
+    ```
+
 2. Navigate to the project directory:
     ```bash
     cd simple_shell
+    ```
+
+3. Compile the program:
+    ```bash
+    gcc -Wall -Werror -Wextra -pedantic *.c -o hsh
+    ```
+
+4. Run the shell:
+    ```bash
+    ./hsh
+    ```
+
+## Language
+
+The project is written entirely in the C programming language (C90 standard).
+
+## Challenges
+
+During the development of this project, the following challenges were encountered:
+
+- Parsing and tokenizing user input efficiently.
+- Implementing process handling using system calls like `fork` and `execve`.
+- Handling edge cases, such as invalid commands or malformed input.
+- Managing memory allocation and avoiding leaks.
+
+## Reference
+
+For more information about Unix shells and system programming, see:
+
+- UNIX Programming FAQ
+- Linux Programmer’s Manual
+- The C Programming Language
+
+## Contributors
+
+- Joseph Gleason Lopez
+- Jean Carlo Carrion Caraballo
+
