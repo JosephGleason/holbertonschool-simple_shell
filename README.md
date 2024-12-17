@@ -16,7 +16,5 @@ The **Simple Shell** project is a custom implementation of a Unix command-line i
    ```bash
    git clone https://github.com/your-repo/simple_shell.git
 2. Navigate to the project directory:
-```bash
-cd simple_shell
-
-
+    ```bash
+    cd simple_shell
