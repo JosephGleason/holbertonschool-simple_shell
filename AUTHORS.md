@@ -4,4 +4,4 @@
 
 **Jean Carlo Carrion Caraballo** _JCChronoKeeper@gmail.com_
 
-**Joseph Gleason Lopez** _ 
+**Joseph Gleason Lopez** _joeg1834@gmail.com_
