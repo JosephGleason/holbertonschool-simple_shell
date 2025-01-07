@@ -185,32 +185,32 @@ int main(void)
 {
 	char *input = NULL;
 	size_t len = 0;
+	int run = 1;
 
-	while (1)
+	while (run)
 	{
 		display_prompt();
 
 		if (getline(&input, &len, stdin) == -1)
 		{
-			break;
+			if (ferror(stdin))
+			{
+				perror("getline");
+			}
+			run = 0;
+			continue;
 		}
 
-		else
+
+		input[strcspn(input, "\n")] = '\0';
+
+		if (!handle_input(input))
 		{
-			perror("getline");
-			break;
+			run = 0;
 		}
 	}
 
-	input[strcspn(input, "\n")] = '\0';
-
-	if (!handle_input(input))
-	{
-		break;
-	}
-}
-
-free(input);
-return (0);
+	free(input);
+	return (0);
 }
 
