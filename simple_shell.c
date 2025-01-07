@@ -192,26 +192,25 @@ int main(void)
 
 		if (getline(&input, &len, stdin) == -1)
 		{
-			if (feof(stdin))
-			{
-				break;
-			}
-			else
-			{
-				perror("getline");
-				break;
-			}
+			break;
 		}
 
-		input[strcspn(input, "\n")] = '\0';
-
-		if (!handle_input(input))
+		else
 		{
+			perror("getline");
 			break;
 		}
 	}
 
-	free(input);
-	return (0);
+	input[strcspn(input, "\n")] = '\0';
+
+	if (!handle_input(input))
+	{
+		break;
+	}
+}
+
+free(input);
+return (0);
 }
 
