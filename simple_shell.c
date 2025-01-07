@@ -16,6 +16,7 @@ void display_prompt(void)
 	if (isatty(STDIN_FILENO))
 	{
 		printf("#cisfun$ ");
+		fflush(stdout);
 	}
 }
 
@@ -35,6 +36,7 @@ char *check_command_in_path(char *command)
 	if (full_path == NULL)
 	{
 		perror("malloc");
+		free(path_copy);
 		exit(1);
 	}
 
@@ -142,7 +144,7 @@ void execute_command(char **args)
 	}
 	else
 	{
-		fprintf(stderr, "Command not found: %s\n", command);
+		fprintf(stderr, "%s: command not found: %s\n", args[0], args[0]);
 	}
 }
 
@@ -193,10 +195,6 @@ int main(void)
 
 		if (getline(&input, &len, stdin) == -1)
 		{
-			if (ferror(stdin))
-			{
-				perror("getline");
-			}
 			run = 0;
 			continue;
 		}
@@ -204,10 +202,9 @@ int main(void)
 
 		input[strcspn(input, "\n")] = '\0';
 
-		if (!handle_input(input))
-		{
-			run = 0;
-		}
+		if (input[0] == '\0')
+			continue;
+		run = handle_input(input);
 	}
 
 	free(input);
