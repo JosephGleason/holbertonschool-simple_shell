@@ -26,36 +26,55 @@ void display_prompt(void)
  *
  * Return: The full path to the command if found, NULL if not.
  */
+
 char *check_command_in_path(char *command)
 {
-	char *path = getenv("PATH");
-	char *path_copy = strdup(path);
-	char *dir = strtok(path_copy, ":");
-	char *full_path = malloc(1024);
+    char *path = NULL;
+    char *path_copy;
+    char *dir;
+    char *full_path = malloc(1024);
+    int i;
 
-	if (full_path == NULL)
-	{
-		perror("malloc");
-		free(path_copy);
-		exit(1);
-	}
+    for (i = 0; environ[i]; i++) {
+        if (strncmp(environ[i], "PATH=", 5) == 0) {
+            path = environ[i] + 5;
+            break;
+        }
+    }
 
-	while (dir != NULL)
-	{
-		snprintf(full_path, 1024, "%s/%s", dir, command);
+    if (path == NULL)
+    {
+        fprintf(stderr, "PATH not found\n");
+        return NULL;
+    }
 
-		if (access(full_path, F_OK) == 0)
-		{
-			free(path_copy);
-			return (full_path);
-		}
+    path_copy = strdup(path);
 
-		dir = strtok(NULL, ":");
-	}
+    if (full_path == NULL)
+    {
+        perror("malloc");
+        free(path_copy);
+        exit(1);
+    }
 
-	free(path_copy); /* Free the duplicated path string */
-	free(full_path);
-	return (NULL); /* Command not found in any directory in PATH */
+    dir = strtok(path_copy, ":");
+
+    while (dir != NULL)
+    {
+        snprintf(full_path, 1024, "%s/%s", dir, command);
+
+        if (access(full_path, F_OK) == 0)
+        {
+            free(path_copy);
+            return (full_path);
+        }
+
+        dir = strtok(NULL, ":");
+    }
+
+    free(path_copy);
+    free(full_path);
+    return (NULL);
 }
 
 /**
