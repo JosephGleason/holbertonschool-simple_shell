@@ -29,52 +29,65 @@ void display_prompt(void)
 
 char *check_command_in_path(char *command)
 {
-    char *path = NULL;
-    char *path_copy;
-    char *dir;
-    char *full_path = malloc(1024);
-    int i;
+	char *path = NULL;
+	char *path_copy;
+	char *dir;
+	char *full_path = malloc(1024);
+	int i;
 
-    for (i = 0; environ[i]; i++) {
-        if (strncmp(environ[i], "PATH=", 5) == 0) {
-            path = environ[i] + 5;
-            break;
-        }
-    }
+	if (command[0] == '.' || command[0] == '/')
+	{
+		if (access(command, F_OK) == 0)
+		{
+			return command;
+		}
+		else
+		{
+			fprintf(stderr, "./hsh: 1: %s: not found\n", command);
+			exit(127);
+		}
+	}
 
-    if (path == NULL)
-    {
-        fprintf(stderr, "PATH not found\n");
-        return NULL;
-    }
+	for (i = 0; environ[i]; i++) {
+		if (strncmp(environ[i], "PATH=", 5) == 0) {
+			path = environ[i] + 5;
+			break;
+		}
+	}
 
-    path_copy = strdup(path);
+	if (path == NULL)
+	{
+		fprintf(stderr, "PATH not found\n");
+		return NULL;
+	}
 
-    if (full_path == NULL)
-    {
-        perror("malloc");
-        free(path_copy);
-        exit(1);
-    }
+	path_copy = strdup(path);
 
-    dir = strtok(path_copy, ":");
+	if (full_path == NULL)
+	{
+		perror("malloc");
+		free(path_copy);
+		exit(1);
+	}
 
-    while (dir != NULL)
-    {
-        snprintf(full_path, 1024, "%s/%s", dir, command);
+	dir = strtok(path_copy, ":");
 
-        if (access(full_path, F_OK) == 0)
-        {
-            free(path_copy);
-            return (full_path);
-        }
+	while (dir != NULL)
+	{
+		snprintf(full_path, 1024, "%s/%s", dir, command);
 
-        dir = strtok(NULL, ":");
-    }
+		if (access(full_path, F_OK) == 0)
+		{
+			free(path_copy);
+			return (full_path);
+		}
 
-    free(path_copy);
-    free(full_path);
-    return (NULL);
+		dir = strtok(NULL, ":");
+	}
+
+	free(path_copy);
+	free(full_path);
+	return (NULL);
 }
 
 /**
