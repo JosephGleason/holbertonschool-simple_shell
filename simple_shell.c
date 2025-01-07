@@ -35,11 +35,11 @@ char *check_command_in_path(char *command)
 	char *full_path = malloc(1024);
 	int i;
 
-	if (command[0] == '.' || command[0] == '/')
+	if (command[0] == '/' || command[0] == '.')
 	{
 		if (access(command, F_OK) == 0)
 		{
-			return command;
+			return (command);
 		}
 		else
 		{
@@ -48,16 +48,18 @@ char *check_command_in_path(char *command)
 		}
 	}
 
-	for (i = 0; environ[i]; i++) {
-		if (strncmp(environ[i], "PATH=", 5) == 0) {
+	for (i = 0; environ[i]; i++)
+	{
+		if (strncmp(environ[i], "PATH=", 5) == 0)
+		{
 			path = environ[i] + 5;
 			break;
 		}
 	}
 
-	if (path == NULL)
+	if (!path || path[0] == '\0') 
 	{
-		fprintf(stderr, "PATH not found\n");
+		fprintf(stderr, "No valid directories in PATH\n");
 		return NULL;
 	}
 
