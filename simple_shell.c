@@ -143,6 +143,11 @@ void execute_command(char **args)
 		{
 			full_path = strdup(command);  /* If command exists, use it directly */
 		}
+		else
+		{
+			fprintf(stderr, "./hsh: 1: %s: not found\n", command);
+			exit(127);
+		}
 	}
 	else
 	{
@@ -177,6 +182,7 @@ void execute_command(char **args)
 	else
 	{
 		fprintf(stderr, "%s: command not found: %s\n", args[0], args[0]);
+		exit(127);
 	}
 }
 
