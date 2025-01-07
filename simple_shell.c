@@ -35,6 +35,7 @@ char *check_command_in_path(char *command)
 	char *full_path = malloc(1024);
 	int i;
 
+	/* Check if the command is an absolute or relative path */
 	if (command[0] == '/' || command[0] == '.')
 	{
 		if (access(command, F_OK) == 0)
@@ -48,6 +49,7 @@ char *check_command_in_path(char *command)
 		}
 	}
 
+	/* Get the value of PATH from the environment */
 	for (i = 0; environ[i]; i++)
 	{
 		if (strncmp(environ[i], "PATH=", 5) == 0)
@@ -57,6 +59,7 @@ char *check_command_in_path(char *command)
 		}
 	}
 
+	/* Handle the case where PATH is empty or not set */
 	if (!path || path[0] == '\0') 
 	{
 		fprintf(stderr, "No valid directories in PATH\n");
@@ -65,6 +68,7 @@ char *check_command_in_path(char *command)
 
 	path_copy = strdup(path);
 
+	/* Check for memory allocation failure */
 	if (full_path == NULL)
 	{
 		perror("malloc");
@@ -76,7 +80,17 @@ char *check_command_in_path(char *command)
 
 	while (dir != NULL)
 	{
+		/* Build the full path */
 		snprintf(full_path, 1024, "%s/%s", dir, command);
+
+		/* Check if snprintf was successful */
+		if (strlen(full_path) >= 1024)
+		{
+			fprintf(stderr, "Path too long: %s/%s\n", dir, command);
+			free(path_copy);
+			free(full_path);
+			return NULL;
+		}
 
 		if (access(full_path, F_OK) == 0)
 		{
