@@ -6,11 +6,23 @@
 #include "shell.h"
 
 /**
- * display_prompt - Display shell prmpt if input is coming from terminal.
+ * Simple Shell Program
  *
- * This function checks if the shell is running interactively
- * and, if so, displays the prompt "#cisfun$ ".
+ * This is a basic shell program that simulates the behavior of a Unix shell.
+ * The shell reads input from the user, parses the input into command and 
+ * arguments, and executes the corresponding command. If the command is not 
+ * found in the directories listed in the PATH environment variable or is 
+ * invalid, an error message is displayed. The shell also supports exit functionality.
+ *
+ * Features:
+ * - Display a prompt (`#cisfun$ `) when the shell is interactive.
+ * - Parse the input into commands and arguments.
+ * - Check if the command is an absolute path or search for it in directories listed in PATH.
+ * - Handle basic commands and execute them using `execve`.
+ * - Handle the `exit` command to terminate the shell.
+ * - Error handling for invalid commands.
  */
+
 void display_prompt(void)
 {
 	if (isatty(STDIN_FILENO))
@@ -21,12 +33,11 @@ void display_prompt(void)
 }
 
 /**
- * check_command_in_path - Check if a comnd exists in directories in PATH.
+ * check_command_in_path - Check if a command exists in directories in PATH.
  * @command: The command to check.
  *
  * Return: The full path to the command if found, NULL if not.
  */
-
 char *check_command_in_path(char *command)
 {
 	char *path = NULL;
@@ -34,6 +45,12 @@ char *check_command_in_path(char *command)
 	char *dir;
 	char *full_path = malloc(1024);
 	int i;
+
+	if (!full_path)
+	{
+		perror("malloc");
+		exit(1);
+	}
 
 	/* Check if the command is an absolute or relative path */
 	if (command[0] == '/' || command[0] == '.')
@@ -69,10 +86,10 @@ char *check_command_in_path(char *command)
 	path_copy = strdup(path);
 
 	/* Check for memory allocation failure */
-	if (full_path == NULL)
+	if (!path_copy)
 	{
 		perror("malloc");
-		free(path_copy);
+		free(full_path);
 		exit(1);
 	}
 
@@ -110,8 +127,6 @@ char *check_command_in_path(char *command)
  * parse_input - Tokenizes the input string into an array of arguments.
  * @input: The input string to be parsed.
  *
- * This func splits input string by spaces, tabs & newlines into indiv args.
- *
  * Return: An array of arguments (strings).
  */
 char **parse_input(char *input)
@@ -120,12 +135,11 @@ char **parse_input(char *input)
 	char **args = malloc(1024 * sizeof(char *));
 	int i = 0;
 
-	if (args == NULL)
+	if (!args)
 	{
 		perror("malloc");
 		exit(1);
 	}
-
 
 	current = strtok(input, " \t\n");
 	while (current != NULL)
@@ -141,9 +155,6 @@ char **parse_input(char *input)
 /**
  * execute_command - Executes the command provided by the user.
  * @args: The array of arguments that represent the command to be executed.
- *
- * This function creates a child process to execute the command using execve().
- * If the command cannot be executed, it prints an error message.
  */
 void execute_command(char **args)
 {
@@ -151,13 +162,11 @@ void execute_command(char **args)
 	char *command = args[0];
 	char *full_path = NULL;
 
-	/* check if command absolute or relative path */
 	if (command[0] == '/' || command[0] == '.')
 	{
-		/*if command is full path, chk if exists */
 		if (access(command, F_OK) == 0)
 		{
-			full_path = strdup(command);  /* If command exists, use it directly */
+			full_path = strdup(command);  
 		}
 		else
 		{
@@ -167,14 +176,12 @@ void execute_command(char **args)
 	}
 	else
 	{
-		/* If command is not full path, srch in PATH */
 		full_path = check_command_in_path(command);
 	}
 
-	/* If command found, execute */
 	if (full_path != NULL)
 	{
-		pid = fork(); /* create new process */
+		pid = fork();
 
 		if (pid == 0)
 		{
@@ -206,9 +213,6 @@ void execute_command(char **args)
  * handle_input - Processes user input and executes the command.
  * @input: The user input string.
  *
- * This function parses the input, checks if the user wants to exit,
- * and executes the command.
- *
  * Return: 0 if "exit" is typed, otherwise returns 1.
  */
 int handle_input(char *input)
@@ -233,8 +237,6 @@ int handle_input(char *input)
 /**
  * main - Main entry point of the shell program.
  *
- * This function handles the main loop of the shell, displaying the prompt,
- * reading input, and processing commands until the user types "exit".
  * Return: 0 if shell exits successfully, or other value if there is an error.
  */
 int main(void)
@@ -252,7 +254,6 @@ int main(void)
 			run = 0;
 			continue;
 		}
-
 
 		input[strcspn(input, "\n")] = '\0';
 
