@@ -154,9 +154,8 @@ char **parse_input(char *input)
 		current = strtok(NULL, " \t\n");
 	}
 	args[i] = NULL;
-
-	return (args);	
-	free(args);
+	
+	return(args);
 }
 
 /**
@@ -173,8 +172,7 @@ void execute_command(char **args)
 	{
 		if (access(command, F_OK) == 0)
 		{
-			full_path = strdup(command);
-			free(full_path);	
+			full_path = strdup(command);	
 		}
 		else
 		{
