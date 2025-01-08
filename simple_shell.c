@@ -169,88 +169,80 @@ char **parse_input(char *input)
  */
 void execute_command(char **args)
 {
-    pid_t pid;
-    char *command = args[0];
-    char *full_path = NULL;
-    int status;
+	pid_t pid;
+	char *command = args[0];
+	char *full_path = NULL;
+	int status;
 
-    if (strcmp(command, "exit") == 0)
-    {
-        if (args[1] != NULL) /* if there's a parameter after 'exit' */
-        {
-            fprintf(stderr, "./hsh: 1: exit: %s: numeric argument required\n", args[1]);
-            exit(2); /* exit with status 2 for invalid exit argument */
-        }
-        else
-        {
-            exit(0); /* exit with status 0 if no argument is passed */
-        }
-    }
+	if (strcmp(command, "exit") == 0)
+	{
+		exit(0); /* Exit the shell with status 0 */
+	}
 
-    /* Check if the command is an absolute path or a relative path */
-    if (command[0] == '/' || command[0] == '.')
-    {
-        /* Check if the command exists */
-        if (access(command, F_OK) == 0)
-        {
-            full_path = strdup(command);
-        }
-        else
-        {
-            fprintf(stderr, "./hsh: 1: %s: not found\n", command);
-            exit(2); /* Exit with status 2 if the command is not found */
-        }
-    }
-    else
-    {
-        /* Check if the command exists in the directories listed in $PATH */
-        full_path = check_command_in_path(command);
-    }
+	/* Check if the command is an absolute path or a relative path */
+	if (command[0] == '/' || command[0] == '.')
+	{
+		/* Check if the command exists */
+		if (access(command, F_OK) == 0)
+		{
+			full_path = strdup(command);
+		}
+		else
+		{
+			fprintf(stderr, "./hsh: 1: %s: not found\n", command);
+			exit(2); /* Exit with status 2 if the command is not found */
+		}
+	}
+	else
+	{
+		/* Check if the command exists in the directories listed in $PATH */
+		full_path = check_command_in_path(command);
+	}
 
-    /* If a valid command path is found, execute it */
-    if (full_path != NULL)
-    {
-        pid = fork();
+	/* If a valid command path is found, execute it */
+	if (full_path != NULL)
+	{
+		pid = fork();
 
-        if (pid == 0)
-        {
-            /* Child process */
-            if (execve(full_path, args, environ) == -1)
-            {
-                perror("./shell");
-                exit(2); /* Exit with status 2 if execve fails */
-            }
-        }
-        else if (pid < 0)
-        {
-            /* Fork failed */
-            perror("fork");
-            exit(2); /* Exit with status 2 if fork fails */
-        }
-        else
-        {
-            /* Parent process waits for the child to finish */
-            waitpid(pid, &status, 0);
+		if (pid == 0)
+		{
+			/* Child process */
+			if (execve(full_path, args, environ) == -1)
+			{
+				perror("./shell");
+				exit(2); /* Exit with status 2 if execve fails */
+			}
+		}
+		else if (pid < 0)
+		{
+			/* Fork failed */
+			perror("fork");
+			exit(2); /* Exit with status 2 if fork fails */
+		}
+		else
+		{
+			/* Parent process waits for the child to finish */
+			waitpid(pid, &status, 0);
 
-            /* If child exits successfully, print "OK" */
-            if (status == 0)
-            {
-                printf("OK\n");
-            }
-            else
-            {
-                exit(2); /* Exit with status 2 if something went wrong */
-            }
-        }
+			/* If child exits successfully, print "OK" */
+			if (status == 0)
+			{
+				printf("OK\n");
+			}
+			else
+			{
+				exit(2); /* Exit with status 2 if something went wrong */
+			}
+		}
 
-        free(full_path); /* Free allocated memory for the command path */
-    }
-    else
-    {
-        /* Command was not found, print an error message */
-        fprintf(stderr, "%s: command not found\n", command);
-        exit(2); /* Exit with status 2 when command not found */
-    }
+		free(full_path); /* Free allocated memory for the command path */
+	}
+	else
+	{
+		/* Command was not found, print an error message */
+		fprintf(stderr, "%s: command not found\n", command);
+		exit(2); /* Exit with status 2 when command not found */
+	}
 }
 /**
  * handle_input - Processes user input and executes the command.
