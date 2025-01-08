@@ -154,13 +154,18 @@ char **parse_input(char *input)
 		current = strtok(NULL, " \t\n");
 	}
 	args[i] = NULL;
-	
+
 	return(args);
 }
 
+
 /**
- * execute_command - Executes the command provided by the user.
- * @args: The array of arguments that represent the command to be executed.
+ * execute_command - Executes a command in a child process.
+ * @args: Arguments to be passed to the command.
+ *
+ * This function executes a command by forking a child process and using
+ * execve to execute the command. It also handles error cases and exits
+ * the shell with the appropriate status code.
  */
 void execute_command(char **args)
 {
@@ -168,53 +173,67 @@ void execute_command(char **args)
 	char *command = args[0];
 	char *full_path = NULL;
 
+	/* If the command is 'exit' with no arguments, exit the shell */
+	if (command != NULL && strcmp(command, "exit") == 0 && args[1] == NULL)
+	{
+		exit(0); /* Exit the shell with status 0 */
+	}
+
+	/* Check if the command is an absolute path or a relative path */
 	if (command[0] == '/' || command[0] == '.')
 	{
+		/* Check if the command exists */
 		if (access(command, F_OK) == 0)
 		{
-			full_path = strdup(command);	
+			full_path = strdup(command);
 		}
 		else
 		{
 			fprintf(stderr, "./hsh: 1: %s: not found\n", command);
-			exit(127);
+			exit(2); /* Exit with status 2 if the command is not found */
 		}
 	}
 	else
 	{
+		/* Check if the command exists in the directories listed in $PATH */
 		full_path = check_command_in_path(command);
 	}
 
+	/* If a valid command path is found, execute it */
 	if (full_path != NULL)
 	{
 		pid = fork();
 
 		if (pid == 0)
 		{
+			/* Child process */
 			if (execve(full_path, args, environ) == -1)
 			{
 				perror("./shell");
-				exit(1);
+				exit(2); /* Exit with status 2 if execve fails */
 			}
 		}
 		else if (pid < 0)
 		{
+			/* Fork failed */
 			perror("fork");
+			exit(2); /* Exit with status 2 if fork fails */
 		}
 		else
 		{
+			/* Parent process waits for the child to finish */
 			wait(NULL);
 		}
 
-		free(full_path);
+		free(full_path); /* Free allocated memory for the command path */
 	}
 	else
 	{
-		fprintf(stderr, "%s: command not found: %s\n", args[0], args[0]);
-		exit(127);
+		/* Command was not found, print an error message */
+		fprintf(stderr, "%s: command not found\n", command);
+		exit(2); /* Exit with status 2 when command not found */
 	}
 }
-
 /**
  * handle_input - Processes user input and executes the command.
  * @input: The user input string.
