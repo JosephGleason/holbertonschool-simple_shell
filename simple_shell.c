@@ -208,6 +208,7 @@ void execute_command(char **args)
 			/* Child process */
 			if (execve(full_path, args, environ) == -1)
 			{
+				perror(command);
 				exit(2); /* Exit with status 2 if execve fails */
 			}
 		}
