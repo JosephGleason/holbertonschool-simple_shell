@@ -244,6 +244,7 @@ void execute_command(char **args)
 		exit(2); /* Exit with status 2 when command not found */
 	}
 }
+
 /**
  * handle_input - Processes user input and executes the command.
  * @input: The user input string.
