@@ -189,6 +189,7 @@ void execute_command(char **args)
 		}
 		else
 		{
+			perror(command);
 			exit(2); /* Exit with status 2 if the command is not found, no stderr */
 		}
 	}
@@ -215,6 +216,7 @@ void execute_command(char **args)
 		else if (pid < 0)
 		{
 			/* Fork failed */
+			perror("fork");
 			exit(2); /* Exit with status 2 if fork fails */
 		}
 		else
@@ -228,6 +230,7 @@ void execute_command(char **args)
 	else
 	{
 		/* Command was not found, silently exit */
+		perror(command);
 		exit(2); /* Exit with status 2 when command not found */
 	}
 }
