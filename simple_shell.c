@@ -233,12 +233,6 @@ int handle_input(char *input)
 
 	if (args[0] != NULL)
 	{
-		if (strncmp(args[0], "export", 6) == 0)
-		{
-			handle_export(args[0]);
-			free(args);
-			return(1);
-		}
 		execute_command(args);
 	}
 
