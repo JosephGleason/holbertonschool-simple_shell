@@ -67,13 +67,19 @@ char *check_command_in_path(char *command)
 	}
 
 	/* Get the value of PATH from the environment */
-	for (i = 0; environ[i]; i++)
+	for (i = 0; environ[i] != NULL; i++)
 	{
 		if (strncmp(environ[i], "PATH=", 5) == 0)
 		{
 			path = environ[i] + 5;
 			break;
 		}
+	}
+
+	if (path == NULL)
+	{
+		/* Fallback PATH */
+		path = "/usr/bin:/bin:/usr/local/bin";
 	}
 
 	/* Handle the case where PATH is empty or not set */
@@ -227,6 +233,12 @@ int handle_input(char *input)
 
 	if (args[0] != NULL)
 	{
+		if (strncmp(args[0], "export", 6) == 0)
+		{
+			handle_export(args[0]);
+			free(args);
+			return(1);
+		}
 		execute_command(args);
 	}
 
