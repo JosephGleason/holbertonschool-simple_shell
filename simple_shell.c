@@ -155,7 +155,8 @@ char **parse_input(char *input)
 	}
 	args[i] = NULL;
 
-	return (args);
+	return (args);	
+	free(args);
 }
 
 /**
@@ -172,7 +173,8 @@ void execute_command(char **args)
 	{
 		if (access(command, F_OK) == 0)
 		{
-			full_path = strdup(command);  
+			full_path = strdup(command);
+			free(full_path);	
 		}
 		else
 		{
