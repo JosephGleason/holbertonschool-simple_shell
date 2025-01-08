@@ -173,12 +173,18 @@ void execute_command(char **args)
 	char *command = args[0];
 	char *full_path = NULL;
 
-	/* If the command is 'exit' with no arguments, exit the shell */
-	if (command != NULL && strcmp(command, "exit") == 0 && args[1] == NULL)
+	if (strcmp(command, "exit") == 0)
 	{
-		exit(0); /* Exit the shell with status 0 */
-	}
-
+		if (args[1] != NULL) /* if there's a parameter after 'exit' */
+		{
+			fprintf(stderr, "./hsh: 1: exit: %s: numeric argument required\n", args[1]);
+			exit(2); /* exit with status 2 for invalid exit argument */
+		}
+		else
+		{
+			exit(0); /* exit with status 0 if no argument is passed */
+		}
+	}	
 	/* Check if the command is an absolute path or a relative path */
 	if (command[0] == '/' || command[0] == '.')
 	{
