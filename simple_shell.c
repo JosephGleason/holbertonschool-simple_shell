@@ -223,16 +223,6 @@ void execute_command(char **args)
 		{
 			/* Parent process waits for the child to finish */
 			waitpid(pid, &status, 0);
-
-			/* If child exits successfully, print "OK" */
-			if (status == 0)
-			{
-				printf("OK\n");
-			}
-			else
-			{
-				exit(2); /* Exit with status 2 if something went wrong */
-			}
 		}
 
 		free(full_path); /* Free allocated memory for the command path */
@@ -244,7 +234,6 @@ void execute_command(char **args)
 		exit(2); /* Exit with status 2 when command not found */
 	}
 }
-
 /**
  * handle_input - Processes user input and executes the command.
  * @input: The user input string.
