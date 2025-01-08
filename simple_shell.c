@@ -189,8 +189,7 @@ void execute_command(char **args)
 		}
 		else
 		{
-			fprintf(stderr, "./hsh: 1: %s: not found\n", command);
-			exit(2); /* Exit with status 2 if the command is not found */
+			exit(2); /* Exit with status 2 if the command is not found, no stderr */
 		}
 	}
 	else
@@ -209,14 +208,12 @@ void execute_command(char **args)
 			/* Child process */
 			if (execve(full_path, args, environ) == -1)
 			{
-				perror("./shell");
 				exit(2); /* Exit with status 2 if execve fails */
 			}
 		}
 		else if (pid < 0)
 		{
 			/* Fork failed */
-			perror("fork");
 			exit(2); /* Exit with status 2 if fork fails */
 		}
 		else
@@ -229,8 +226,7 @@ void execute_command(char **args)
 	}
 	else
 	{
-		/* Command was not found, print an error message */
-		fprintf(stderr, "%s: command not found\n", command);
+		/* Command was not found, silently exit */
 		exit(2); /* Exit with status 2 when command not found */
 	}
 }
