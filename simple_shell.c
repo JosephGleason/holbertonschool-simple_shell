@@ -172,6 +172,7 @@ void execute_command(char **args)
 	pid_t pid;
 	char *command = args[0];
 	char *full_path = NULL;
+	int status;
 
 	if (strcmp(command, "exit") == 0)
 	{
@@ -184,7 +185,8 @@ void execute_command(char **args)
 		{
 			exit(0); /* exit with status 0 if no argument is passed */
 		}
-	}	
+	}
+
 	/* Check if the command is an absolute path or a relative path */
 	if (command[0] == '/' || command[0] == '.')
 	{
@@ -228,7 +230,14 @@ void execute_command(char **args)
 		else
 		{
 			/* Parent process waits for the child to finish */
-			wait(NULL);
+			waitpid(pid, &status, 0);
+
+			/* Check if the child exited normally */
+			if (status != 0)
+			{
+				/* If the child process didn't exit normally, exit with status 2 */
+				exit(2);
+			}
 		}
 
 		free(full_path); /* Free allocated memory for the command path */
