@@ -8,11 +8,27 @@
 void execute_from_path(char *command, char **args)
 {
 	char *full_path = check_command_in_path(command);
+	struct stat st;
 	pid_t pid;
 
-	if (full_path == NULL)
+	if (full_path == NULL || stat(full_path, &st) != 0)
 	{
 		fprintf(stderr, "%s: command not found\n", command);
+		free(full_path);
+		return;
+	}
+
+	if (st.st_size == 0)
+	{
+		fprintf(stderr, "%s: File is empty\n", command);
+		free(full_path);
+		return;
+	}
+
+	if (access(full_path, X_OK) != 0)
+	{
+		fprintf(stderr, "%s: Permission denied or not executable\n", command);
+		free(full_path);
 		return;
 	}
 
@@ -23,6 +39,7 @@ void execute_from_path(char *command, char **args)
 		free(full_path);
 		return;
 	}
+
 	if (pid == 0)
 	{
 		/* Child process: Execute the command */
@@ -41,6 +58,7 @@ void execute_from_path(char *command, char **args)
 
 	free(full_path);
 }
+
 
 /**
  * handle_input - Handles the input received from the user
