@@ -63,8 +63,11 @@ char *check_command_in_path(char *command)
 	char *path_env, *path_copy, *dir, *full_path;
 
 	path_env = get_path_env();
-	if (path_env == NULL)
-		return (NULL);
+	if (path_env == NULL || strlen(path_env) == 0)
+	{
+		/* Fallback to default directories when PATH is empty */
+		path_env = "/bin:/usr/bin";
+	}
 
 	path_copy = strdup(path_env);
 	if (path_copy == NULL)
@@ -93,7 +96,6 @@ char *check_command_in_path(char *command)
 	free(path_copy);
 	return (NULL);
 }
-
 /**
  * wait_for_child_process - Waits for the child process to finish
  * @pid: The process ID of the child process.
@@ -110,13 +112,5 @@ void wait_for_child_process(pid_t pid)
 	if (waitpid(pid, &status, 0) == -1)
 	{
 		perror("waitpid");
-	}
-	else
-	{
-		/* Optionally check the exit status of the child process */
-		if (WIFEXITED(status))
-		{
-			printf("Child exited with status %d\n", WEXITSTATUS(status));
-		}
 	}
 }
