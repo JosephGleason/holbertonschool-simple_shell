@@ -62,7 +62,7 @@ char *check_command_in_path(char *command)
 		else
 		{
 			fprintf(stderr, "./hsh: 1: %s: not found\n", command);
-			exit(NULL);
+			exit(127);
 		}
 	}
 
