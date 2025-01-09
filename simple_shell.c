@@ -76,17 +76,10 @@ char *check_command_in_path(char *command)
 		}
 	}
 
-	if (path == NULL)
+	if (path == NULL || path[0] == '\0')
 	{
 		/* Fallback PATH */
 		path = "/usr/bin:/bin:/usr/local/bin";
-	}
-
-	/* Handle the case where PATH is empty or not set */
-	if (!path || path[0] == '\0') 
-	{
-		fprintf(stderr, "No valid directories in PATH\n");
-		return NULL;
 	}
 
 	path_copy = strdup(path);
