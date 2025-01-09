@@ -12,13 +12,15 @@
 
 extern char **environ;
 
-int execute_command(char *command, char **args);
+/* Function declarations */
+void execute_command(char *command, char **args);
 int handle_input(char *input);
 char **parse_input(char *input);
 void display_prompt(void);
 char *check_command_in_path(char *command);
+char *construct_full_path(char *dir, char *command);
+int is_command_executable(char *full_path);
 void fork_and_exec_command(char *full_path, char **args);
 void wait_for_child_process(pid_t pid);
 
 #endif /* SHELL_H */
-
