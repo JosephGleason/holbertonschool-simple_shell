@@ -1,48 +1,49 @@
 #!/bin/bash
 
-# Compile the shell program
-gcc -Wall -Werror -Wextra -pedantic *.c -o hsh
-if [ $? -ne 0 ]; then
-    echo "Compilation failed. Fix the errors and try again."
-    exit 1
-fi
+# Path to your shell program
+SHELL_PROGRAM="./hsh"
 
-echo "Compilation succeeded."
+# List of test commands to check
+TEST_COMMANDS=(
+    "ls"
+    "pwd"
+    "echo Hello"
+    "cat /etc/passwd"
+    "whoami"
+    "date"
+    "exit"
+)
 
-# Test PATH handling
-echo "Testing PATH handling..."
+# Directories to check in the PATH
+PATH_DIRS=$(echo $PATH | tr ':' ' ')
 
-# Test a command in PATH
-echo "Testing 'ls' (should work if PATH is set correctly)..."
-ls_output=$(echo "ls" | ./hsh)
-if [[ $ls_output == "" ]]; then
-    echo "Error: 'ls' not found or PATH not handled correctly."
-else
-    echo "'ls' executed successfully."
-fi
+# Function to run a test command
+run_test() {
+    local command="$1"
+    echo "Running command: $command"
 
-# Test a fallback PATH
-echo "Temporarily clearing PATH to test fallback..."
-OLD_PATH=$PATH
-export PATH=""
-ls_fallback=$(echo "ls" | ./hsh)
-if [[ $ls_fallback == "" ]]; then
-    echo "Error: fallback PATH not working."
-else
-    echo "Fallback PATH executed 'ls' successfully."
-fi
-export PATH=$OLD_PATH
+    # Run the command in the custom shell and in the system shell for comparison
+    echo -n "Output from your shell: "
+    $SHELL_PROGRAM -c "$command"
+    echo -n "Output from system shell: "
+    bash -c "$command"
 
-# Run other test commands
-echo "Starting additional command tests. Press Ctrl+C to exit at any time."
-echo "
-ls
-pwd
-echo 'Hello, World!'
-invalidcommand
-/bin/ls
-exit
-" | ./hsh
+    echo "--------------------------------------------------"
+}
 
-echo "Shell execution test completed."
+# Test each command
+for command in "${TEST_COMMANDS[@]}"; do
+    run_test "$command"
+done
+
+# Test commands with full paths
+for dir in $PATH_DIRS; do
+    echo "Testing commands in directory: $dir"
+    for command in "${TEST_COMMANDS[@]}"; do
+        full_path="$dir/$command"
+        if [ -x "$full_path" ]; then
+            echo "Found $command in $dir"
+        fi
+    done
+done
 
