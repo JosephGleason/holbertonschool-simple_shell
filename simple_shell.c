@@ -21,6 +21,7 @@ int main(void)
 	char *input = NULL;
 	size_t len = 0;
 	int run = 1;
+	char **args;
 
 	while (run)
 	{
@@ -28,6 +29,11 @@ int main(void)
 
 		if (getline(&input, &len, stdin) == -1)
 		{
+			if (input == NULL)  /* Check if getline returns NULL*/
+			{
+				break;  /* EOF or error, exit loop*/
+			}
+			perror("getline");
 			run = 0;
 			continue;
 		}
@@ -37,7 +43,19 @@ int main(void)
 		if (input[0] == '\0')
 			continue;
 
-		run = handle_input(input);
+		args = parse_input(input);  /* Parse the input into arguments*/
+		if (args[0] != NULL)
+		{
+			if (strcmp(args[0], "exit") == 0)  /* Handle exit command*/
+			{
+				free(args);
+				free(input);
+				exit(0);  /* Or return to exit the shell*/
+			}
+			execute_from_path(args[0], args);  /* Call execute_from_path*/
+		}
+		free(args);  /* Don't forget to free the memory*/
+
 	}
 
 	free(input);

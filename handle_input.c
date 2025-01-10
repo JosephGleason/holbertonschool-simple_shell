@@ -1,38 +1,49 @@
 #include "shell.h"
 
 /**
- * execute_from_path - Executes a command found in the PATH
- * @args: The arguments for the command
- * @command: The command to execute
+ * validate_command - Validates a command's existence, size, and permissions
+ * @command: The command to validate
+ *
+ * Return: Full path to the command if valid, NULL otherwise
  */
-void execute_from_path(char *command, char **args)
+char *validate_command(char *command)
 {
 	char *full_path = check_command_in_path(command);
 	struct stat st;
-	pid_t pid;
 
 	if (full_path == NULL || stat(full_path, &st) != 0)
 	{
 		fprintf(stderr, "%s: command not found\n", command);
 		free(full_path);
-		return;
+		return (NULL);
 	}
 
 	if (st.st_size == 0)
 	{
 		fprintf(stderr, "%s: File is empty\n", command);
 		free(full_path);
-		return;
+		return (NULL);
 	}
 
 	if (access(full_path, X_OK) != 0)
 	{
 		fprintf(stderr, "%s: Permission denied or not executable\n", command);
 		free(full_path);
-		return;
+		return (NULL);
 	}
 
-	pid = fork();
+	return (full_path);
+}
+
+/**
+ * fork_and_execute - Forks a process and executes a command
+ * @full_path: Full path to the command
+ * @args: The arguments for the command
+ */
+void fork_and_execute(char *full_path, char **args)
+{
+	pid_t pid = fork();
+
 	if (pid < 0)
 	{
 		perror("fork");
@@ -59,30 +70,18 @@ void execute_from_path(char *command, char **args)
 	free(full_path);
 }
 
-
 /**
- * handle_input - Handles the input received from the user
- * @input: The user input to be processed.
- *
- * Return: 1 if the shell should continue running, 0 if it should exit.
+ * execute_from_path - Executes a command found in the PATH
+ * @args: The arguments for the command
+ * @command: The command to execute
  */
-int handle_input(char *input)
+void execute_from_path(char *command, char **args)
 {
-	char **args;
+	char *full_path = validate_command(command);
 
-	args = parse_input(input);
-	if (args[0] != NULL && strcmp(args[0], "exit") == 0)
+	if (full_path != NULL)
 	{
-		free(args);
-		return (0);
+		fork_and_execute(full_path, args);
 	}
-
-	if (args[0] != NULL)
-	{
-		execute_from_path(args[0], args);
-	}
-
-	free(args);
-	return (1);
 }
 
