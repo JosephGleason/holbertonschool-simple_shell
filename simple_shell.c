@@ -23,6 +23,7 @@ int main(void)
 	size_t len = 0;
 	int run = 1;
 	char **args;
+	int i;
 
 
 	while (run)
@@ -62,6 +63,7 @@ int main(void)
 
 		args = parse_input(input); /* Parse the input into arguments */
 
+
 		/* Ensure args is not NULL */
 		if (args != NULL && args[0] != NULL)
 		{
@@ -69,12 +71,12 @@ int main(void)
 		}
 
 		/* Free memory for arguments, assuming each element in args was malloced */
-		if (args != NULL)
+		for (i = 0; args[i] != NULL; i++)
 		{
-			free(args);
+			free(args[i]); 
 		}
+		free(args);  
 	}
-
 	free(input); /* Free input buffer before exit */
 	return (0);
 }

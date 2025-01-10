@@ -35,6 +35,7 @@ void execute_from_path(char *cmd, char **args)
 				{
 					perror("execve");  /* Print the error message */
 					free(cmd_path);  /* Free memory before exiting */
+					free(args);
 					exit(1);  /* Exit child process with failure */
 				}
 			}
