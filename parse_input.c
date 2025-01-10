@@ -1,14 +1,5 @@
 #include "shell.h"
 
-/**
- * parse_input - Parses the user input into commands and arguments
- * @input: The raw input string from the user.
- *
- * This function processes the user input, separates it into individual
- * commands and arguments, and returns the parsed data.
- *
- * Return: A pointer to an array of strings containing commands and arguments.
- */
 char **parse_input(char *input)
 {
 	char *current;

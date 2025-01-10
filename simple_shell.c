@@ -5,9 +5,10 @@
  */
 void display_prompt(void)
 {
+	/* Only display the prompt if running interactively (from terminal) */
 	if (isatty(STDIN_FILENO))
 	{
-		write(STDOUT_FILENO, "$ ", 2);
+		write(STDOUT_FILENO, "$ ", 2); /* Display prompt using write */
 	}
 }
 
@@ -25,40 +26,52 @@ int main(void)
 
 	while (run)
 	{
-		display_prompt();
+		display_prompt(); /* Show prompt for interactive mode */
 
-		if (getline(&input, &len, stdin) == -1)
+		/* Handle input, considering both interactive and non-interactive modes */
+		if (isatty(STDIN_FILENO))
 		{
-			if (input == NULL)  /* Check if getline returns NULL*/
+			if (getline(&input, &len, stdin) == -1)
 			{
-				break;  /* EOF or error, exit loop*/
+				if (input == NULL) /* Check if getline returns NULL */
+				{
+					break; /* EOF or error, exit loop */
+				}
+				perror("getline");
+				run = 0;
+				continue;
 			}
-			perror("getline");
-			run = 0;
-			continue;
+		}
+		else
+		{
+			/* For non-interactive mode (e.g., sandbox), continue reading input */
+			if (getline(&input, &len, stdin) == -1)
+			{
+				break; /* EOF or error, exit loop */
+			}
 		}
 
-		input[strcspn(input, "\n")] = '\0';
+		input[strcspn(input, "\n")] = '\0'; /* Remove the newline character */
 
 		if (input[0] == '\0')
-			continue;
+			continue; /* Skip empty input */
 
-		args = parse_input(input);  /* Parse the input into arguments*/
+		/* Handle the exit command */
+		if (strcmp(input, "exit") == 0)
+		{
+			free(input);  /* Free input buffer */
+			exit(0);      /* Exit the shell */
+		}
+
+		args = parse_input(input); /* Parse the input into arguments */
 		if (args[0] != NULL)
 		{
-			if (strcmp(args[0], "exit") == 0)  /* Handle exit command*/
-			{
-				free(args);
-				free(input);
-				exit(0);  /* Or return to exit the shell*/
-			}
-			execute_from_path(args[0], args);  /* Call execute_from_path*/
+			execute_from_path(args[0], args); /* Call execute_from_path for execution */
 		}
-		free(args);  /* Don't forget to free the memory*/
-
+		free(args); /* Free memory for arguments */
 	}
 
-	free(input);
+	free(input); /* Free input buffer before exit */
 	return (0);
 }
 

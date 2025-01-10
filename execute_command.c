@@ -9,15 +9,27 @@
  */
 char *construct_full_path(char *dir, char *command)
 {
-	char *full_path = malloc(strlen(dir) + strlen(command) + 2);
+	char *full_path;
 
-	if (full_path == NULL)
+	/* Check if dir or command is NULL to prevent potential segmentation faults */
+	if (dir == NULL || command == NULL)
+	{
 		return (NULL);
+	}
 
+	/* Allocate memory for the full path, including the directory, command, and the slash between them */
+	full_path = malloc(strlen(dir) + strlen(command) + 2);  /* +2 for slash and null terminator*/
+	if (full_path == NULL)
+	{
+		perror("malloc failed");
+		return (NULL);  /* Return NULL if malloc fails*/
+	}
+
+	/* Construct the full path */
 	sprintf(full_path, "%s/%s", dir, command);
+
 	return (full_path);
 }
-
 /**
  * is_command_executable - Checks if the command is executable
  * @full_path: The full path of the command
@@ -71,7 +83,10 @@ char *check_command_in_path(char *command)
 
 	path_copy = strdup(path_env);
 	if (path_copy == NULL)
+	{
+		perror("strdup failed");
 		return (NULL);
+	}
 
 	dir = strtok(path_copy, ":");
 	while (dir != NULL)

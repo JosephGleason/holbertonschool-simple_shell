@@ -1,87 +1,52 @@
 #include "shell.h"
 
-/**
- * validate_command - Validates a command's existence, size, and permissions
- * @command: The command to validate
- *
- * Return: Full path to the command if valid, NULL otherwise
- */
-char *validate_command(char *command)
+void execute_from_path(char *cmd, char **args)
 {
-	char *full_path = check_command_in_path(command);
+	char *path = "/bin:/usr/bin";  /* Define a default path manually */
+	char *dir, *cmd_path;
 	struct stat st;
 
-	if (full_path == NULL || stat(full_path, &st) != 0)
+	dir = strtok(path, ":");
+	while (dir)
 	{
-		fprintf(stderr, "%s: command not found\n", command);
-		free(full_path);
-		return (NULL);
-	}
+		cmd_path = malloc(strlen(dir) + strlen(cmd) + 2);  /* Allocate memory for cmd path */
+		if (!cmd_path)
+			return;
 
-	if (st.st_size == 0)
-	{
-		fprintf(stderr, "%s: File is empty\n", command);
-		free(full_path);
-		return (NULL);
-	}
+		strcpy(cmd_path, dir);
+		strcat(cmd_path, "/");
+		strcat(cmd_path, cmd);
 
-	if (access(full_path, X_OK) != 0)
-	{
-		fprintf(stderr, "%s: Permission denied or not executable\n", command);
-		free(full_path);
-		return (NULL);
-	}
-
-	return (full_path);
-}
-
-/**
- * fork_and_execute - Forks a process and executes a command
- * @full_path: Full path to the command
- * @args: The arguments for the command
- */
-void fork_and_execute(char *full_path, char **args)
-{
-	pid_t pid = fork();
-
-	if (pid < 0)
-	{
-		perror("fork");
-		free(full_path);
-		return;
-	}
-
-	if (pid == 0)
-	{
-		/* Child process: Execute the command */
-		if (execve(full_path, args, environ) == -1)
+		if (stat(cmd_path, &st) == 0 && st.st_mode & S_IXUSR)  /* Check if file is executable */
 		{
-			perror("execve");
-			free(full_path);
-			exit(EXIT_FAILURE);
+			pid_t pid = fork();
+			if (pid == 0)  /* Child process */
+			{
+				if (execve(cmd_path, args, environ) == -1)  /* If execve fails */
+				{
+					perror("execve");  /* Print the error message */
+					free(cmd_path);  /* Free memory before exiting */
+					exit(1);  /* Exit child process with failure */
+				}
+			}
+			else if (pid > 0)  /* Parent process */
+			{
+				wait(NULL);  /* Wait for the child process to finish */
+				free(cmd_path);  /* Free memory */
+				return;
+			}
+			else  /* Fork failed */
+			{
+				perror("fork");
+				free(cmd_path);  /* Free memory before returning */
+				return;
+			}
 		}
-	}
-	else
-	{
-		/* Parent process: Wait for the child to finish */
-		wait_for_child_process(pid);
+
+		free(cmd_path);  /* Free memory before moving to the next directory */
+		dir = strtok(NULL, ":");
 	}
 
-	free(full_path);
-}
-
-/**
- * execute_from_path - Executes a command found in the PATH
- * @args: The arguments for the command
- * @command: The command to execute
- */
-void execute_from_path(char *command, char **args)
-{
-	char *full_path = validate_command(command);
-
-	if (full_path != NULL)
-	{
-		fork_and_execute(full_path, args);
-	}
+	fprintf(stderr, "%s: command not found\n", cmd);  /* Command not found message */
 }
 
