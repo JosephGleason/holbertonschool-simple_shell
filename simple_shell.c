@@ -23,7 +23,7 @@ int main(void)
 	size_t len = 0;
 	int run = 1;
 	char **args;
-	
+
 
 	while (run)
 	{
@@ -34,13 +34,9 @@ int main(void)
 		{
 			if (getline(&input, &len, stdin) == -1)
 			{
-				if (input == NULL) /* Check if getline returns NULL */
-				{
-					break; /* EOF or error, exit loop */
-				}
-				perror("getline");
-				run = 0;
-				continue;
+
+				break; /* EOF or error, exit loop */
+
 			}
 		}
 		else
