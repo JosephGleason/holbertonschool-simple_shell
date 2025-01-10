@@ -24,5 +24,6 @@ void fork_and_exec_command(char *full_path, char **args);
 void wait_for_child_process(pid_t pid);
 char *validate_command(char *command);
 void fork_and_execute(char *full_path, char **args);
+char *get_path_env(void);
 
 #endif /* SHELL_H */
