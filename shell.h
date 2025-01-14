@@ -14,7 +14,7 @@
 extern char **environ;
 
 /* Function declarations */
-void execute_from_path(char *command, char **args);
+void execute_from_path(char *prog_name, char *command, char **args);
 char **parse_input(char *input);
 void display_prompt(void);
 char *check_command_in_path(char *command);

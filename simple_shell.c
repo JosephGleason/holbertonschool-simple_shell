@@ -5,10 +5,9 @@
  */
 void display_prompt(void)
 {
-	/* Only display the prompt if running interactively (from terminal) */
-	if (isatty(STDIN_FILENO))
+	if (isatty(STDIN_FILENO)) /* Check if input is from a terminal */
 	{
-		write(STDOUT_FILENO, "$ ", 2); /* Display prompt using write */
+		write(STDOUT_FILENO, "$ ", 2); /* Display prompt */
 	}
 }
 
@@ -19,65 +18,53 @@ void display_prompt(void)
  */
 int main(void)
 {
-	char *input = NULL;
-	size_t len = 0;
-	int run = 1;
-	char **args;
-	int i;
-
+	char *input_line = NULL;  /* Pointer for input line */
+	size_t len = 0;          /* Size for getline */
+	ssize_t read;            /* Read return value */
+	char **args;             /* Array for parsed arguments */
+	int i;                   /* Loop index */
+	int run = 1;             /* Flag to control the main loop */
 
 	while (run)
 	{
 		display_prompt(); /* Show prompt for interactive mode */
 
-		/* Handle input, considering both interactive and non-interactive modes */
-		if (isatty(STDIN_FILENO))
+		/* Read input using getline */
+		read = getline(&input_line, &len, stdin);
+		if (read == -1) /* EOF or error */
 		{
-			if (getline(&input, &len, stdin) == -1)
-			{
-
-				break; /* EOF or error, exit loop */
-
-			}
-		}
-		else
-		{
-			/* For non-interactive mode (e.g., sandbox), continue reading input */
-			if (getline(&input, &len, stdin) == -1)
-			{
-				break; /* EOF or error, exit loop */
-			}
+			if (isatty(STDIN_FILENO))
+				write(STDOUT_FILENO, "\n", 1); /* Print newline for EOF */
+			break;
 		}
 
-		input[strcspn(input, "\n")] = '\0'; /* Remove the newline character */
+		input_line[strcspn(input_line, "\n")] = '\0'; /* Remove newline character */
 
-		if (input[0] == '\0')
+		if (input_line[0] == '\0')
 			continue; /* Skip empty input */
 
-		/* Handle the exit command */
-		if (strcmp(input, "exit") == 0)
+		if (strcmp(input_line, "exit") == 0) /* Handle "exit" command */
 		{
-			free(input);  /* Free input buffer */
-			exit(0);      /* Exit the shell */
+			free(input_line);
+			exit(0);
 		}
 
-		args = parse_input(input); /* Parse the input into arguments */
+		args = parse_input(input_line); /* Parse input into arguments */
 
-
-		/* Ensure args is not NULL */
-		if (args != NULL && args[0] != NULL)
+		if (args != NULL && args[0] != NULL) /* Ensure arguments are valid */
 		{
-			execute_from_path(args[0], args); /* Call execute_from_path for execution */
+			execute_from_path("simple_shell", args[0], args); /* Execute command */
 		}
 
-		/* Free memory for arguments, assuming each element in args was malloced */
+		/* Free memory allocated for arguments */
 		for (i = 0; args[i] != NULL; i++)
 		{
-			free(args[i]); 
+			free(args[i]);
 		}
-		free(args);  
+		free(args);
 	}
-	free(input); /* Free input buffer before exit */
+
+	free(input_line); /* Free input buffer before exiting */
 	return (0);
 }
 
