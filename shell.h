@@ -4,8 +4,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <sys/wait.h>
+#include <string.h>
 
+extern char **environ;
+
+/* Function Declarations */
 void display_prompt(void);
+char *find_command(char *command);
+char **input_handler(char *line);
 
 #endif /* SHELL_H */
 

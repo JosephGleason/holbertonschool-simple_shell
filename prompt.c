@@ -8,5 +8,6 @@
  */
 void display_prompt(void)
 {
-	write(STDOUT_FILENO, "$ ", 2);
+	if (isatty(STDIN_FILENO))
+		write(STDOUT_FILENO, "$ ", 2);/* Show prompt only in interactive mode */
 }
