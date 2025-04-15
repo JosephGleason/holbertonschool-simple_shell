@@ -1,4 +1,3 @@
-
 #include "shell.h"
 
 /**
@@ -8,29 +7,74 @@
  */
 int main(void)
 {
-	char *line = NULL;/*ptr to a char buffer set to NULL*/
-	size_t len = 0;/*size of buffer init to 0, getline will set it properly*/
-	ssize_t read;/*number of chars read from user input*/
+	char *line = NULL;
+	size_t len = 0;
+	ssize_t read;
+	pid_t pid;
+	int status;
+	char **args;
+	char *cmd_path;
 
-	while(1)/*infinite loop*/
+	while (1)
 	{
-		display_prompt();/*gotta show dat prompt baby*/
+		if (isatty(STDIN_FILENO))
+			display_prompt();
 
-		read = getline(&line, &len, stdin);/*read input from user*/
-		if (read == -1)/*if user ctrl+d (EOF) or exit shell*/
+		read = getline(&line, &len, stdin);
+		if (read > 0 && line[read - 1] == '\n')
+			line[read - 1] = '\0';
+
+		if (read == -1)
 		{
 			free(line);
-			write(STDOUT_FILENO, "\n", 1);/*prints newline char to terminal*/
+			if (isatty(STDIN_FILENO))
+				write(STDOUT_FILENO, "\n", 1);
 			exit(0);
 		}
-		if (line[read - 1] == '\n')/*erase '\n' from terminal*/
+
+		args = input_handler(line);
+		if (args == NULL || args[0] == NULL)
 		{
-			line[read - 1] = '\0';
+			free(args);
+			continue;
 		}
 
-		write(STDOUT_FILENO, line, read - 1);
-		write(STDOUT_FILENO, "\n", 1);/*adds new line for formatting*/
+		cmd_path = find_command(args[0]);
+		if (cmd_path == NULL)
+		{
+			perror("command not found");
+			free(args);
+			continue;
+		}
+
+		pid = fork();
+
+		if (pid == -1)
+		{
+			perror("fork failed");
+			free(line);
+			free(cmd_path);
+			free(args);
+			exit(1);
+		}
+		else if (pid == 0)
+		{
+			if (execve(cmd_path, args, environ) == -1)
+			{
+				perror("execve failed");
+				free(cmd_path);
+				free(args);
+				exit(1);
+			}
+		}
+		else
+		{
+			wait(&status);
+			free(cmd_path);
+			free(args);
+		}
 	}
+
 	free(line);
 	return (0);
 }
