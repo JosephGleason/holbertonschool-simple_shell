@@ -6,6 +6,7 @@
 #include <unistd.h>
 
 void display_prompt(void);
+void betty_matrix(int a[8][8]);
 
 #endif /* SHELL_H */
 
