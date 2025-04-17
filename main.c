@@ -1,5 +1,4 @@
 #include "shell.h"
-
 /**
  * main - Entry point for the simple shell program
  *
@@ -10,10 +9,7 @@ int main(void)
 	char *line = NULL;
 	size_t len = 0;
 	ssize_t read;
-	pid_t pid;
-	int status;
 	char **args;
-	char *cmd_path;
 
 	while (1)
 	{
@@ -39,40 +35,6 @@ int main(void)
 			continue;
 		}
 
-		cmd_path = find_command(args[0]);
-		if (cmd_path == NULL)
-		{
-			perror("command not found");
-			free(args);
-			continue;
-		}
-
-		pid = fork();
-
-		if (pid == -1)
-		{
-			perror("fork failed");
-			free(line);
-			free(cmd_path);
-			free(args);
-			exit(1);
-		}
-		else if (pid == 0)
-		{
-			if (execve(cmd_path, args, environ) == -1)
-			{
-				perror("execve failed");
-				free(cmd_path);
-				free(args);
-				exit(1);
-			}
-		}
-		else
-		{
-			wait(&status);
-			free(cmd_path);
-			free(args);
-		}
 	}
 
 	free(line);
