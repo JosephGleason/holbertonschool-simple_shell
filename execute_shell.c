@@ -1,10 +1,10 @@
 #include "shell.h"
 /**
-* main - Entry point
+* execute_shell - Handles the PATH to execute shell
 *
 *
 *
-* Return: 0; or non-zero valued as an error if fails
+* Return: 0
 */
 int execute_shell(void)
 {
