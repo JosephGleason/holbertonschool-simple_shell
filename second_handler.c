@@ -3,7 +3,7 @@
 * second_handler - Prints error message for NULL path
 * @args: argument
 *
-* Return: Prints message error for NULL path
+* Return: Prints message error for NULL path, 0
 */
 int second_handler(char **args)
 {
@@ -15,8 +15,7 @@ int second_handler(char **args)
 	{
 		perror("command not found");
 		free(args);
-		continue;
 	}
 	free(line);
-	return (line);
+	return (0);
 }
