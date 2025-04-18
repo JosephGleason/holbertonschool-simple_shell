@@ -1,12 +1,21 @@
-Simple Shell
+Shell Terminal
 
-▶ Introduction 
-    The collaborators to create this simple Shell Terminal were Joseph Gleason and Kamila Sostre. The 
-purpose of this project is to apply all the concepts learned for C language while executing a terminal. 
-This was arranged in seven files to handle inputs, prompts and execution of the shell. A separate repository was made as the checker for each task that allows the terminal to fully function. 
+▶ Introduction
+
+    The collaborators to create this simple Shell Terminal were 
+Joseph Gleason and Kamila Sostre. The purpose of this project is to 
+apply all the concepts learned for C language while executing a 
+terminal. This was arranged in seven files to handle inputs, 
+prompts and execution of the shell. A separate repository was made 
+as the checker for each task that allows the terminal to fully function. 
 
 ▶ Description
-  The Shell Terminal is a command interpreter that manages processes and uses an interface between the user and the operating system. It captures the users input and sends it to the shell and parses it into a command and arguments. The PATH environment variable is used to search for the executable command 
+
+  The Shell Terminal is a command interpreter that manages 
+processes and uses an interface between the user and the 
+operating system. It captures the users input and sends it to the 
+shell and parses it into a command and arguments. The PATH 
+environment variable is used to search for the executable command 
 and, I/O commands to handle inputs and outputs. 
 
 ▶ Requisites
