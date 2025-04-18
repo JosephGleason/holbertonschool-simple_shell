@@ -38,49 +38,51 @@ and, I/O commands to handle inputs and outputs.
 
 ▶ Usage
 
-   #include "shell.h"
+      #include "shell.h"
 
-   void execute_command(char **args)
-   {
-      pid_t pid;
+      void execute_command(char **args)
+   
+      {
       
-      int status;
+          pid_t pid;
+      
+          int status;
 
-      pid = fork()
+          pid = fork()
    
-      if (pid == 0)
+          if (pid == 0)
  
-      {
+          {
          
-             if (execve(args[0], args, environ) == -1)
+               if (execve(args[0], args, environ) == -1)
          
-             {
+               {
             
-                perror("Error");
+                   perror("Error");
             
-                exit(EXIT_FAILURE);
+                   exit(EXIT_FAILURE);
          
-             }
+               }
    
-      }
+         }
    
-      else if (pid > 0)
+         else if (pid > 0)
    
-      {
+         {
    
-          waitpid(pid, &status, 0);
+             waitpid(pid, &status, 0);
    
-      }
+         }
    
-      else
+         else
    
-      {
+         {
    
-        perror("Error");
+             perror("Error");
    
-      }
+         }
 
-   }
+     }
 
 
 ▶ Branches
