@@ -2,7 +2,7 @@ Shell Terminal
 
 ▶ Introduction
 
-    The collaborators to create this simple Shell Terminal were 
+  The collaborators to create this simple Shell Terminal were 
 Joseph Gleason and Kamila Sostre. The purpose of this project is to 
 apply all the concepts learned for C language while executing a 
 terminal. This was arranged in seven files to handle inputs, 
