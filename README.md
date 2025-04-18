@@ -1,4 +1,4 @@
-Shell Terminal
+Simple Shell Terminal
 
 ▶ Introduction
 
