@@ -10,13 +10,15 @@ int main(int argc, char *argv[])
 	size_t len = 0;
 	ssize_t read;
 	char **args;
+	int lineno = 0;
 	int status = 0;
-	int line_num = 0;
 
 	(void)argc;
 
 	while (1)/*infinite loop*/
 	{
+		lineno++;
+
 		if (isatty(STDIN_FILENO))
 			display_prompt();
 
@@ -50,11 +52,9 @@ int main(int argc, char *argv[])
 			free(line);
 			exit(status);
 		}
-
-		line_num++;
 		
 		/* — ▶ Execute the command ▶ — */
-		status = execute_shell(args, argv[0], line_num);
+		status = execute_shell(args, argv[0], lineno);
 		free(args);
 	}
 
