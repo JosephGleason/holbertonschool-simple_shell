@@ -37,6 +37,12 @@ int main(void)
 			free(args);
 			continue;
 		}
+		if (strcmp(args[0], "exit") == 0)
+		{
+			free(args);
+			free(line);
+			exit(0);
+		}
 		/* — ▶ Execute the command ▶ — */
 		execute_shell(args);
 		free(args);
