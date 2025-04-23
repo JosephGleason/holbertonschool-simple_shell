@@ -20,8 +20,6 @@ char *find_command(char *command)
 	path_env = getenv("PATH");
 	if (path_env == NULL)
 		return (NULL);
-	fprintf(stderr, "PATH: %s\n", path_env);
-
 
 	path_copy = strdup(path_env);
 	if (path_copy == NULL)
@@ -47,4 +45,3 @@ char *find_command(char *command)
 
 	return (NULL);
 }
-

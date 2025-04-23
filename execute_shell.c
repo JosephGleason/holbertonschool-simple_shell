@@ -1,18 +1,22 @@
 #include "shell.h"
 /**
-* execute_shell - Handles the PATH to execute shell
-*
-*
-*
-* Return: 0
-*/
-int execute_shell(void)
+ * execute_shell - Handles the PATH to execute shell
+ *
+ *
+ *
+ * Return: 0
+ */
+int execute_shell(char **args)
 {
 	char *line = NULL;
 	pid_t pid;
 	int status;
-	char **args = NULL;
-	char *cmd_path = NULL;
+	char *cmd_path;
+
+	/* find the full path of the command */
+	cmd_path = find_command(args[0]);
+	if (cmd_path == NULL)
+		return (perror(args[0]), 1);
 
 	pid = fork();
 
@@ -35,10 +39,9 @@ int execute_shell(void)
 		}
 	}
 	else
-{
+	{
 		wait(&status);
 		free(cmd_path);
-		free(args);
 	}
 
 	free(line);

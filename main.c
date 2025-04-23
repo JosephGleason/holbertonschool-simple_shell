@@ -29,12 +29,17 @@ int main(void)
 		}
 
 		args = input_handler(line);
-		if (args == NULL || args[0] == NULL)
+		if (args == NULL)            /* malloc/realloc failure */
+			continue;
+
+		if (args[0] == NULL)         /* blank line (newline only) */
 		{
 			free(args);
 			continue;
 		}
-
+		/* — ▶ Execute the command ▶ — */
+		execute_shell(args);
+		free(args);
 	}
 
 	free(line);
