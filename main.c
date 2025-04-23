@@ -4,15 +4,19 @@
  *
  * Return: 0 on success, or a non-zero value on error.
  */
-int main(void)
+int main(int argc, char *argv[])
 {
 	char *line = NULL;
 	size_t len = 0;
 	ssize_t read;
 	char **args;
+	int lineno = 0;
+	int status;
+	(void)argc;
 
 	while (1)/*infinite loop*/
 	{
+		lineno++;
 		if (isatty(STDIN_FILENO))
 			display_prompt();
 
@@ -44,9 +48,16 @@ int main(void)
 			exit(0);
 		}
 		/* — ▶ Execute the command ▶ — */
-		execute_shell(args);
+
+		status = execute_shell(args, argv[0], lineno);
 		free(args);
+		if (status != 0)
+		{
+			free(line);
+			exit(status);
+		}
 	}
+
 
 	free(line);
 	return (0);

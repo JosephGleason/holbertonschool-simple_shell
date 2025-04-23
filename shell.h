@@ -14,7 +14,7 @@ void display_prompt(void);
 void betty_matrix(int a[8][8]);
 char *find_command(char *command);
 char **input_handler(char *line);
-int execute_shell(char **args);
+int execute_shell(char **args, char *prog_name, int lineno);
 int second_handler(char **args);
 
 #endif /* SHELL_H */
