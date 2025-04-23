@@ -16,6 +16,7 @@ char *find_command(char *command);
 char **input_handler(char *line);
 int execute_shell(char **args, char *prog_name, int lineno);
 int second_handler(char **args);
+int handle_env(char **args);
 
 #endif /* SHELL_H */
 

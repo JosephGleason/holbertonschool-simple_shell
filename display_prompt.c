@@ -11,3 +11,23 @@ void display_prompt(void)
 	if (isatty(STDIN_FILENO))
 		write(STDOUT_FILENO, "$ ", 2);/* Show prompt only in interactive mode */
 }
+
+/**
+* handle_env - Prints all environment varoiables
+* @args: an array of command line arguments, frees args
+*
+*
+* Return: 0 on success
+*/
+int handle_env(char **args)
+{
+	int i = 0;
+
+	while (environ[i] != NULL)
+	{
+		printf("%s\n", environ[i]);
+		i++;
+	}
+	free(args);
+	return (0);
+}
