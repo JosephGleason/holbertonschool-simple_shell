@@ -11,7 +11,11 @@ int main(void)
 	ssize_t read;
 	char **args;
 
+<<<<<<< HEAD
+	while (1)/*infinite loop*/
+=======
 	while (1)
+>>>>>>> main
 	{
 		if (isatty(STDIN_FILENO))
 			display_prompt();
