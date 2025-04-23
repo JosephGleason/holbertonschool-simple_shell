@@ -12,12 +12,13 @@ char **input_handler(char *line)
 	char *word;
 	int i = 0;
 	int bufsize = 64;
+	const char *delim = " \t\r\n";
 
 	args = malloc(sizeof(char *) * bufsize);
 	if (args == NULL)
 		return (NULL);
 
-	word = strtok(line, " ");
+	word = strtok(line, delim);
 	while (word != NULL)
 	{
 		args[i] = word;
@@ -31,7 +32,7 @@ char **input_handler(char *line)
 				return (NULL);
 		}
 
-		word = strtok(NULL, " ");
+		word = strtok(NULL, delim);
 	}
 	args[i] = NULL;
 
