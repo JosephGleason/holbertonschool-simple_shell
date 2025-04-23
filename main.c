@@ -11,6 +11,7 @@ int main(int argc, char *argv[])
 	ssize_t read;
 	char **args;
 	int lineno = 0;
+	int status;
 	(void)argc;
 
 	while (1)/*infinite loop*/
@@ -41,9 +42,16 @@ int main(int argc, char *argv[])
 			continue;
 		}
 		/* — ▶ Execute the command ▶ — */
-		execute_shell(args, argv[0], lineno);
+
+		status = execute_shell(args, argv[0], lineno);
 		free(args);
+		if (status != 0)
+		{
+			free(line);
+			exit(status);
+		}
 	}
+
 
 	free(line);
 	return (0);
