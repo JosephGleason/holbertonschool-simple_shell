@@ -10,27 +10,29 @@ int main(int argc, char *argv[])
 	size_t len = 0;
 	ssize_t read;
 	char **args;
-	int lineno = 0;
-	int status;
+	int status = 0;
+	int line_num = 0;
+
 	(void)argc;
 
 	while (1)/*infinite loop*/
 	{
-		lineno++;
 		if (isatty(STDIN_FILENO))
 			display_prompt();
 
 		read = getline(&line, &len, stdin);
-		if (read > 0 && line[read - 1] == '\n')
-			line[read - 1] = '\0';
 
 		if (read == -1)
 		{
 			free(line);
+
 			if (isatty(STDIN_FILENO))
 				write(STDOUT_FILENO, "\n", 1);
-			exit(0);
+			exit(status);
 		}
+
+		if (read > 0 && line [read - 1] == '\n')
+			line[read - 1] = '\0';
 
 		args = input_handler(line);
 		if (args == NULL)            /* malloc/realloc failure */
@@ -41,23 +43,20 @@ int main(int argc, char *argv[])
 			free(args);
 			continue;
 		}
+
 		if (strcmp(args[0], "exit") == 0)
 		{
 			free(args);
 			free(line);
-			exit(0);
-		}
-		/* — ▶ Execute the command ▶ — */
-
-		status = execute_shell(args, argv[0], lineno);
-		free(args);
-		if (status != 0)
-		{
-			free(line);
 			exit(status);
 		}
-	}
 
+		line_num++;
+		
+		/* — ▶ Execute the command ▶ — */
+		status = execute_shell(args, argv[0], line_num);
+		free(args);
+	}
 
 	free(line);
 	return (0);

@@ -18,7 +18,7 @@ int execute_shell(char **args, char *prog_name, int lineno)
 	{
 		/* custom error: prog_name: lineno: command: not found */
 		fprintf(stderr, "%s: %d: %s: not found\n",
-				prog_name, lineno, args[0]);
+	  prog_name, lineno, args[0]);
 		return (127);
 	}
 	pid = fork();
@@ -29,6 +29,7 @@ int execute_shell(char **args, char *prog_name, int lineno)
 		free(cmd_path);
 		exit(1);
 	}
+
 	else if (pid == 0)
 	{
 		if (execve(cmd_path, args, environ) == -1)
@@ -39,10 +40,13 @@ int execute_shell(char **args, char *prog_name, int lineno)
 		}
 	}
 	else
-	{
+{
 		wait(&status);
 		free(cmd_path);
 	}
 
-	return (0);
+	if (WIFEXITED(status))
+		return (WEXITSTATUS(status));
+	else
+		return (1);
 }
