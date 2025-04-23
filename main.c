@@ -12,7 +12,7 @@ int main(void)
 	size_t len = 0;/*size of buffer init to 0, getline will set it properly*/
 	ssize_t read;/*number of chars read from user input*/
 
-	while(1)/*infinite loop*/
+	while (1)/*infinite loop*/
 	{
 		display_prompt();/*gotta show dat prompt baby*/
 
