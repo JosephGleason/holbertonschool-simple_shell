@@ -1,6 +1,8 @@
 #include "shell.h"
 /**
  * main - Entry point for the simple shell program
+ * @argc: argument count (number of elements in argv)
+ * @argv: array of strings: program name and arguments
  *
  * Return: 0 on success, or a non-zero value on error.
  */
@@ -33,7 +35,7 @@ int main(int argc, char *argv[])
 			exit(status);
 		}
 
-		if (read > 0 && line [read - 1] == '\n')
+		if (read > 0 && line[read - 1] == '\n')
 			line[read - 1] = '\0';
 
 		args = input_handler(line);
