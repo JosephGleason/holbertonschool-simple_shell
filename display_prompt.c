@@ -19,7 +19,7 @@ void display_prompt(void)
 *
 * Return: 0 on success
 */
-int handle_env(char **args)
+int handle_env(void)
 {
 	int i = 0;
 
