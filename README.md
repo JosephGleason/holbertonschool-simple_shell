@@ -22,7 +22,7 @@ and, I/O commands to handle inputs and outputs.
  
 * Each file ends with a new line.
 * The codes must be correctly checked with Betty style.
-* There is no memory leaks
+* There are no memory leaks
 * Limited to 5 functions per file
 * The header file must be guarded
 
