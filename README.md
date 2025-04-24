@@ -28,11 +28,13 @@ and, I/O commands to handle inputs and outputs.
 
 ▶ Protoypes and Functions
 
-* void display_prompt(void);
-* char *find_command(char *command);
-* char **input_handler(char *line);
-* int execute_shell(void);
-* int second_handler(char **args);
+* void display_prompt(void)
+* char *find_command(char *command)
+* char **input_handler(char *line)
+* int execute_shell(void)
+* int second_handler(char **args)
+* int handle_env(void)
+* int handle_builtins(char **args, char **line_p, int *status_p)
 * read
 * write
 * exit

@@ -18,7 +18,7 @@ that were written into this program. To call this program write ./hsh in the ter
 This program uses interactive and non-interactive modes,
 only built-in functions can be used in this custom shell terminal.
 
-.SH EXAMPLE
+.SH USAGE
 
 .TP
 Interactive:
@@ -45,9 +45,13 @@ char **input_handler(char *line) - Analyzes and interprets syntax of a text to e
 int execute_shell(void) - Manages the PATH to execute the shell terminal
 .TP
 int second_handler(char **args) -  Checks if for the NULL line and prints the error message
+.TP
+int handle_env - Prints all the environment variables so the program can process them
+.TP
+int handle_builtins(char **args, char **line_p, int *status_p) - Handles blanks, environment and exit commands.
 
 .SH BUGS
-There is no known bugs in this program.
+There are no known bugs in this program.
 
 .SH AUTHORS
 [Joseph Gleason - https://github.com/JosephGleason]
