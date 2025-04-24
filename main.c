@@ -46,13 +46,20 @@ int main(int argc, char *argv[])
 			continue;
 		}
 
+		if (strcmp(args[0], "env") == 0)
+		{
+			status = handle_env(args);
+			free(args);
+			continue;
+		}
+
 		if (strcmp(args[0], "exit") == 0)
 		{
 			free(args);
 			free(line);
 			exit(status);
 		}
-		
+
 		/* — ▶ Execute the command ▶ — */
 		status = execute_shell(args, argv[0], lineno);
 		free(args);
