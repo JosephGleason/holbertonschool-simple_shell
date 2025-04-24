@@ -28,6 +28,5 @@ int handle_env(char **args)
 		printf("%s\n", environ[i]);
 		i++;
 	}
-	free(args);
 	return (0);
 }

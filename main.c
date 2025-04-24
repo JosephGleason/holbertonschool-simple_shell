@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
 
 		if (strcmp(args[0], "env") == 0)
 		{
-			status = handle_env(args);
+			status = handle_env();
 			free(args);
 			continue;
 		}
