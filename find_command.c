@@ -30,7 +30,7 @@ char *find_command(char *command)
 
 	path_copy = strdup(path_env);/*Make a writable copy*/
 	if (path_copy == NULL)
-		return (Ntoken = strtok(path_copy, ":"));
+		return (token = strtok(path_copy, ":"));
 	while (token != NULL)
 	{   /*Build full_path with sprintf (allowed)*/
 		sprintf(full_path, "%s/%s", token, command);
