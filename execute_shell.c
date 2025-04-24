@@ -1,8 +1,9 @@
 #include "shell.h"
 /**
  * execute_shell - Handles the PATH to execute shell
- *
- *
+ * @args: array of strings with commands and arguments
+ * @prog_name: holds programs name
+ * @lineno: line number from input
  *
  * Return: 0
  */
