@@ -13,7 +13,7 @@ void display_prompt(void)
 }
 
 /**
-* handle_env - Prints all environment varoiables
+* handle_env - Prints all environment variables
 *
 *
 * Return: 0 on success
