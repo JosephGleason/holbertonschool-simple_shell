@@ -14,7 +14,6 @@ void display_prompt(void)
 
 /**
 * handle_env - Prints all environment varoiables
-* @args: an array of command line arguments, frees args
 *
 *
 * Return: 0 on success

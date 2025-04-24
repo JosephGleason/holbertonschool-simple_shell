@@ -17,8 +17,7 @@ char *find_command(char *command)
 	if (strchr(command, '/') != NULL)
 		return (strdup(command));
 
-	/* Manually locate the PATH entry in environ[] */
-	for (i = 0; environ[i]; i++)
+	for (i = 0; environ[i]; i++)/*Manually locate the PATH entry in environ[]*/
 	{
 		if (strncmp(environ[i], "PATH=", 5) == 0)
 		{
@@ -29,16 +28,11 @@ char *find_command(char *command)
 	if (path_env == NULL)
 		return (NULL);
 
-	/* Make a writable copy */
-	path_copy = strdup(path_env);
+	path_copy = strdup(path_env);/*Make a writable copy*/
 	if (path_copy == NULL)
-		return (NULL);
-
-	/* Walk each directory in PATH */
-	token = strtok(path_copy, ":");
+		return (Ntoken = strtok(path_copy, ":"));
 	while (token != NULL)
-	{
-		/* Build full_path using sprintf (allowed) */
+	{   /*Build full_path with sprintf (allowed)*/
 		sprintf(full_path, "%s/%s", token, command);
 		if (access(full_path, X_OK) == 0)
 		{
